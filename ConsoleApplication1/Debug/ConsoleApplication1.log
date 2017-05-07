@@ -1,0 +1,3 @@
+﻿  stdafx.cpp
+  ogl_fps_controls.cpp
+c:\users\gustavo\desktop\inf01009_trabalho_complementar_1_camera\ogl_fps_controls.cpp(29): fatal error C1083: Cannot open include file: 'GL/glut.h': No such file or directory
