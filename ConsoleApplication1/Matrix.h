@@ -27,13 +27,14 @@ public:
 	}
 
 	void normalize_vertex_project() {
-		this->set_data(0, 0, this->get_data(0, 0) / this->get_data(0, 3));
+		this->set_data(0, 0, this->get_data(0, 0) / this->get_data(3, 0));
 	}
 
 	bool check_vertex_projected() {
 		return (abs(get_data(0, 0)) < abs(get_data(3, 0))
 			|| abs(get_data(1, 0)) < abs(get_data(3, 0))
 			|| abs(get_data(2, 0)) < abs(get_data(3, 0)));
+		//return std::abs(get_data(3, 0)) < 0.000001 ;
 	}
 
 private:

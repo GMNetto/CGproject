@@ -76,5 +76,8 @@ void Camera::setShape(float vAng, float asp, float nearD, float farD) {
 	gluPerspective(viewAngle, aspect, nearDist, farDist);
 	glMatrixMode(GL_MODELVIEW);
 	this->projection_close2GLnew->setProjection(nearD, farD, asp, vAng);
+	GLfloat model[16];
+	glGetFloatv(GL_PROJECTION_MATRIX, model);
+
 	//glLoadIdentity();
 }

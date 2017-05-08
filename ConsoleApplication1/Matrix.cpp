@@ -87,8 +87,9 @@ void Matrix::setProjection(float near_d, float far_d, float aspect, float fovy) 
 	this->data[1][1] = 2*near_d/(top - bottom);
 	this->data[1][2] = (top + bottom)/ (top - bottom);
 	this->data[1][3] = 0;*/
-	float f = cos(fovy / 2) / sin(fovy / 2);
-	this->data[0][0] = 2*f/aspect;
+	float rad_fovy = (3.14159265 / 180 * (fovy / 2));
+	float f = cos(rad_fovy) / sin(rad_fovy);
+	this->data[0][0] = f/aspect;
 	this->data[0][1] = 0;
 	this->data[0][2] = 0;
 	this->data[0][3] = 0;

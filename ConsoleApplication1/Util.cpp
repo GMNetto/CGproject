@@ -13,6 +13,15 @@ void init_settings(Tri_model* object)
 	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0 };
 	GLfloat ambient[] = { object->ambient_color[0].x, object->ambient_color[0].y, object->ambient_color[0].z, 1.0 };
 
+	GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	GLfloat LightPosition[] = { 5.0f, 5.0f, -10.0f, 1.0f };
+
+	glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
+	glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
+	glEnable(GL_LIGHTING);  // Turn on lighting
+	glEnable(GL_LIGHT1);    // Turn on light 1
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_SMOOTH);
