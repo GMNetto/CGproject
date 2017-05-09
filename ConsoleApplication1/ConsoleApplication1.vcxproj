@@ -27,13 +27,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -68,13 +68,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,13 +93,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\include\GL;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;freeglut.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;freeglut.lib;glew32.lib;glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,13 +109,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\include\GL;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;freeglut.lib;glew32.lib;glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;freeglut.lib;glew32.lib;glui32.lib;glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -180,6 +180,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
