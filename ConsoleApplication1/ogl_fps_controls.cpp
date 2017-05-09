@@ -15,6 +15,7 @@
 
 #define OPENGL_WINDOW 0
 #define CLOSE2GL_WINDOW 1
+#define EXAMPLE_WINDOW 2
 
 //-----------------------------------------------------------------------------
 // GLOBALS
@@ -43,7 +44,7 @@ int win_id[2];
 float data[4][4];
 Matrix *viewModel_close2GL = new Matrix(data), *projection_close2GLnew = new Matrix(data), *viewPort_close2GL = new Matrix(data);
 
-Camera cam(viewModel_close2GL, projection_close2GLnew, viewPort_close2GL);
+Camera cam(viewModel_close2GL, projection_close2GLnew, viewPort_close2GL, win_id, 2);
 
 GLUI_EditText *file;
 bool first = true;
@@ -59,7 +60,9 @@ void myKeyboard(unsigned char key, int x, int y)
 	switch (key)
 	{
 		// controls for camera
-	case 'd': cam.slide(0, 0, 0.2); break; // slide camera forward
+	case 'd':
+		cam.slide(0, 0, 0.2);
+		break; // slide camera forward
 	case 'd' - 32: cam.slide(0, 0, -0.2); break; //slide camera back
 	case 's': cam.slide(0, 0.2, 0); break; // slide camera forward
 	case 's' - 32: cam.slide(0, -0.2, -0); break; //slide camera back
@@ -68,12 +71,18 @@ void myKeyboard(unsigned char key, int x, int y)
 												 // add up/down and left/right controls
 	case 'p': cam.pitch(-1.0); break;
 	case 'p' - 32: cam.pitch(1.0); break;
-	case 'r': cam.roll(-1.0); break;
+	case 'r': cam.roll(-1.0);
+		break;
 	case 'r' - 32: cam.roll(1.0); break;
 	case 'y': cam.yaw(-1.0); break;
 	case 'y' - 32: cam.yaw(1.0); break;
 		// add roll and yaw controls
 	}
+	
+	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
+	cam.setModelViewMatrix();
+	glutPostRedisplay();
+	glutSetWindow(win_id[OPENGL_WINDOW]);
 	glutPostRedisplay(); // draw it again
 }
 
@@ -116,15 +125,8 @@ void close2glReshape(int w, int h)
 //***********************************************
 void openglReshape(int w, int h)
 {
-	// set the viewport to the size of the window
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	// set the projection matrix
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//gluPerspective( 45.0f, 640.0f / 480.0f, Znear, Zfar); 
-	// set the modelview matrix to identity
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+
 }
 
 Tri_model* object;
@@ -198,11 +200,8 @@ void display_object() {
 	glBegin(GL_TRIANGLES);
 
 	for (int i = 0; i < object->number_triangles; ++i) {
-		;// display_face(object->faces[i]);
+		display_face(object->faces[i]);
 	}
-	glVertex2f(0.0f, 0.75f); // top of the roof
-	glVertex2f(-0.5f, 0.25f); // left corner of the roof
-	glVertex2f(0.5f, 0.25f); // right corner of the roof
 
 	glEnd();
 
@@ -223,8 +222,8 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 	Matrix projected_v1 = proj_view.vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	Matrix projected_v2 = proj_view.vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-		return;
+	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+	//	return;
 
 	projected_v0.normalize_vertex_project();
 	projected_v1.normalize_vertex_project();
@@ -236,9 +235,9 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 
 	//Clipping
 	//(face.face_normal.x, face.face_normal.y, face.face_normal.z);
-	//glVertex2f(viewport_v0.get_data(0,0), viewport_v0.get_data(0, 1));
-	//glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(0, 1));
-	//glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(0, 1));
+	glVertex2f(viewport_v0.get_data(0,0), viewport_v0.get_data(0, 1));
+	glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(0, 1));
+	glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(0, 1));
 	glVertex2f(0, 1);
 	glVertex2f(0, 0);
 	glVertex2f(1, 0);
@@ -249,13 +248,12 @@ void close2glDisplay(void)
 //	<set a model view matrix based on the most current camera parameters to be used in your rendering>
 //		<tri model>.<your close2gl renderer> (<render mode>, <clip mode>);
 
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
-
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 
 	cam.setShape(zoom_spinner->get_int_val(), 640.0f / 480.0f, near_spinner->get_int_val(), far_spinner->get_int_val());
 
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (primitives == 1)
@@ -289,31 +287,19 @@ void close2glDisplay(void)
 	{
 		glColor3f(red, green, blue);
 	}
-	//glMatrixMode(GL_PROJECTION);  // Tell opengl that we are doing project matrix work
-	//glLoadIdentity();  // Clear the matrix
-	//gluOrtho2D(-1, 1, -1, 1);  // Setup an Ortho view
-	//glMatrixMode(GL_MODELVIEW);  // Tell opengl that we are doing model matrix work. (drawing)
-	//glLoadIdentity(); // Clear the model matrix
 
-	//gluLookAt(0, 0, 1, 0, 0, 0, 0, 1, 0);
-	//glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
 
 	Point3 eye = cam.get_eye();
-	//Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
+	Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
 	for (int i = 0; i < object->number_triangles; ++i) {
-		;//display_faces_close2GL(proje_view, object->faces[i]);
+		display_faces_close2GL(proje_view, object->faces[i]);
 	}
 
-	glVertex2f(0.0f, 0.75f); // top of the roof
-	glVertex2f(-0.5f, 0.25f); // left corner of the roof
-	glVertex2f(0.5f, 0.25f); // right corner of the roof
+
 	glEnd();
 
 	glutSwapBuffers();
-	//glFlush();
-
-	//glutPostRedisplay();
 }
 
 int main_window = 1, wireframe = 0, segments = 8;
@@ -327,15 +313,16 @@ void myGlutIdle(void)
 	glutPostRedisplay();
 }
 
+
 void init_close2GL() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(450, 0);
 	glutInitWindowSize(640, 480);
 	win_id[CLOSE2GL_WINDOW] = glutCreateWindow("Close2GL");
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
+	init_settings(object);
+	//glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 	glutDisplayFunc(close2glDisplay);
 	glutReshapeFunc(close2glReshape);
-	glutKeyboardFunc(myKeyboard);
 
 	//glutIdleFunc(myGlutIdle);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -347,6 +334,8 @@ void init_close2GL() {
 
 	projection_close2GLnew->setProjection(cam.getNearDist(), cam.getFarDist(), 45.0f, 640.0f/480.0f);
 	viewPort_close2GL->setViewPort(1.0, 1.0, 0.0, 0.0);
+	cam.setModelViewMatrix();
+	cam.setShape(45.0f, 640.0f / 480.0f, Znear, Zfar);
 
 	//glutSetWindow(win_id[OPENGL_WINDOW]);
 }
@@ -372,7 +361,7 @@ void init_openGL() {
 	centered_position = vector_3d(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1);
 	centered_orientation = vector_3d(avg_x, avg_y, avg_z);
 	cam.setShape(45.0f, 640.0f / 480.0f, Znear, Zfar);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 }
 
 void reload_file(int control) {
@@ -449,17 +438,8 @@ void set_lighting(int control) {
 	glutPostRedisplay();
 }
 
-// This creates the spinning of the cube.
-static void TimeEvent(int te)
-{
-	glutSetWindow(win_id[OPENGL_WINDOW]);
-	glutPostRedisplay();  // Update screen with new rotation data
 
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
-	glutPostRedisplay();  // Update screen with new rotation data
 
-	glutTimerFunc(100, TimeEvent, 1);  // Reset our timmer.
-}
 
 
 int main(int argc, char *argv[])
@@ -468,9 +448,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	init_openGL();
 	init_close2GL();
-	glutTimerFunc(10, TimeEvent, 1);
-
-
+	
 	/****************************************/
 	/*         Here's the GLUI code         */
 	/****************************************/

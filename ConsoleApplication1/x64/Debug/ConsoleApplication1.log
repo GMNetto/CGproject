@@ -1,40 +1,41 @@
-﻿Build started 5/8/2017 4:19:50 PM.
+﻿Build started 5/9/2017 12:55:05 PM.
      1>Project "C:\Users\Gustavo Netto\Documents\cg\ConsoleApplication1\ConsoleApplication1.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\include\GL" /I"C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut" /I"C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew" /I"C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL" /I"C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src" /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt ogl_fps_controls.cpp
          ogl_fps_controls.cpp
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\Camera.h(21): warning C4267: '=' : conversion from 'size_t' to 'int', possible loss of data
      1>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\include\GL\glui.h(868): warning C4244: 'argument' : conversion from 'double' to 'GLfloat', possible loss of data
-     1>ogl_fps_controls.cpp(33): warning C4056: overflow in floating-point constant arithmetic
-     1>ogl_fps_controls.cpp(62): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>ogl_fps_controls.cpp(63): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>ogl_fps_controls.cpp(34): warning C4056: overflow in floating-point constant arithmetic
      1>ogl_fps_controls.cpp(64): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>ogl_fps_controls.cpp(65): warning C4305: 'argument' : truncation from 'double' to 'float'
      1>ogl_fps_controls.cpp(66): warning C4305: 'argument' : truncation from 'double' to 'float'
      1>ogl_fps_controls.cpp(67): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>ogl_fps_controls.cpp(163): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(257): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(371): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(372): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(388): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(394): warning C4056: overflow in floating-point constant arithmetic
-     1>ogl_fps_controls.cpp(396): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(68): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>ogl_fps_controls.cpp(69): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>ogl_fps_controls.cpp(70): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>ogl_fps_controls.cpp(165): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(253): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(360): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(361): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(377): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(383): warning C4056: overflow in floating-point constant arithmetic
+     1>ogl_fps_controls.cpp(385): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(413): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ogl_fps_controls.cpp(417): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>ogl_fps_controls.cpp(424): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(428): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ogl_fps_controls.cpp(435): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(394): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(394): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(394): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(395): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(395): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(395): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(394): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(395): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(33): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(33): warning C4756: overflow in constant arithmetic
-     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(33): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(383): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(383): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(383): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(384): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(384): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(384): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(383): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(384): warning C4756: overflow in constant arithmetic
      1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(34): warning C4756: overflow in constant arithmetic
      1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(34): warning C4756: overflow in constant arithmetic
      1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(34): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(35): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(35): warning C4756: overflow in constant arithmetic
+     1>c:\users\gustavo netto\documents\cg\consoleapplication1\ogl_fps_controls.cpp(35): warning C4756: overflow in constant arithmetic
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Gustavo Netto\Documents\cg\x64\Debug\ConsoleApplication1.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut" /LIBPATH:"C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew" /LIBPATH:"C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug" opengl32.lib freeglut.lib glew32.lib glui32.lib glui32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Gustavo Netto\Documents\cg\x64\Debug\ConsoleApplication1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Gustavo Netto\Documents\cg\x64\Debug\ConsoleApplication1.lib" /MACHINE:X64 x64\Debug\Camera.obj
          x64\Debug\Matrix.obj
@@ -47,4 +48,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.99
+Time Elapsed 00:00:01.14

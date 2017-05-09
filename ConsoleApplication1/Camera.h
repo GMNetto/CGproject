@@ -5,17 +5,20 @@
 #include <math.h>
 #include "Util.h"
 #include "Matrix.h"
+#include <vector>
 
 class Camera
 {
 public:
-	Camera(Matrix *viewModel_close2GL_, Matrix *projection_close2GLnew_, Matrix *viewPort_close2GL_) {
+	Camera(Matrix *viewModel_close2GL_, Matrix *projection_close2GLnew_, Matrix *viewPort_close2GL_, int *windows_id, size_t number) {
 		u = { 1, 0, 0 };
 		u = { 0, 1, 0 };
 		n = { 0, 0, -1 };
 		this->viewModel_close2GL = viewModel_close2GL_;
 		this->projection_close2GLnew = projection_close2GLnew_;
 		this->viewPort_close2GL = viewPort_close2GL_;
+		windows = windows_id;
+		size_w = number;
 	};
 	void set(Point3 eye, Point3 look, Vector3 up);
 	void set_looking_same_point(Point3 eye, Vector3 up);
@@ -48,14 +51,18 @@ public:
 		return eye;
 	}
 
+	void setModelViewMatrix();
+
+	
+
 private:
 	int follow = 0;
 	Point3 eye, look;
 	Vector3 u, v, n;
 	int hfov = 60, vfov = 60;
 	float viewAngle, aspect, nearDist, farDist;
-	void setModelViewMatrix();
 	Matrix *viewModel_close2GL, *projection_close2GLnew, *viewPort_close2GL;
+	int *windows, size_w = 0;
 };
 
 
@@ -71,6 +78,13 @@ inline void Camera::setModelViewMatrix()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glLoadMatrixf(m); // load OpenGL’s modelview matrix
+
+	/*for (int i = 0; i < size_w; i++)
+	{
+		glutSetWindow(windows[i]);
+		glutPostRedisplay();
+	}*/
+	//glutSetWindow(windows[0]);
 }
 
 
