@@ -15,6 +15,7 @@
 
 #define OPENGL_WINDOW 0
 #define CLOSE2GL_WINDOW 1
+#define EXAMPLE_WINDOW 2
 
 //-----------------------------------------------------------------------------
 // GLOBALS
@@ -38,7 +39,7 @@ vector_3d centered_position = { 0, 0, 0 }, centered_orientation = { 0, 0, 0 };
 
 float red_color = 0, green_color = 0, blue_color = 0;
 
-int win_id[2];
+int win_id[3];
 
 float data[4][4];
 Matrix *viewModel_close2GL = new Matrix(data), *projection_close2GLnew = new Matrix(data), *viewPort_close2GL = new Matrix(data);
@@ -198,11 +199,8 @@ void display_object() {
 	glBegin(GL_TRIANGLES);
 
 	for (int i = 0; i < object->number_triangles; ++i) {
-		;// display_face(object->faces[i]);
+		display_face(object->faces[i]);
 	}
-	glVertex2f(0.0f, 0.75f); // top of the roof
-	glVertex2f(-0.5f, 0.25f); // left corner of the roof
-	glVertex2f(0.5f, 0.25f); // right corner of the roof
 
 	glEnd();
 
@@ -223,8 +221,8 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 	Matrix projected_v1 = proj_view.vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	Matrix projected_v2 = proj_view.vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-		return;
+	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+	//	return;
 
 	projected_v0.normalize_vertex_project();
 	projected_v1.normalize_vertex_project();
@@ -236,9 +234,9 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 
 	//Clipping
 	//(face.face_normal.x, face.face_normal.y, face.face_normal.z);
-	//glVertex2f(viewport_v0.get_data(0,0), viewport_v0.get_data(0, 1));
-	//glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(0, 1));
-	//glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(0, 1));
+	glVertex2f(viewport_v0.get_data(0,0), viewport_v0.get_data(0, 1));
+	glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(0, 1));
+	glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(0, 1));
 	glVertex2f(0, 1);
 	glVertex2f(0, 0);
 	glVertex2f(1, 0);
@@ -249,13 +247,10 @@ void close2glDisplay(void)
 //	<set a model view matrix based on the most current camera parameters to be used in your rendering>
 //		<tri model>.<your close2gl renderer> (<render mode>, <clip mode>);
 
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
+	//glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	cam.setShape(zoom_spinner->get_int_val(), 640.0f / 480.0f, near_spinner->get_int_val(), far_spinner->get_int_val());
-
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (primitives == 1)
@@ -300,14 +295,14 @@ void close2glDisplay(void)
 	glBegin(GL_TRIANGLES);
 
 	Point3 eye = cam.get_eye();
-	//Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
+	Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
 	for (int i = 0; i < object->number_triangles; ++i) {
-		;//display_faces_close2GL(proje_view, object->faces[i]);
+		display_faces_close2GL(proje_view, object->faces[i]);
 	}
 
-	glVertex2f(0.0f, 0.75f); // top of the roof
-	glVertex2f(-0.5f, 0.25f); // left corner of the roof
-	glVertex2f(0.5f, 0.25f); // right corner of the roof
+	//glVertex2f(0.0f, 0.75f); // top of the roof
+	//glVertex2f(-0.5f, 0.25f); // left corner of the roof
+	//glVertex2f(0.5f, 0.25f); // right corner of the roof
 	glEnd();
 
 	glutSwapBuffers();
@@ -327,6 +322,7 @@ void myGlutIdle(void)
 	glutPostRedisplay();
 }
 
+
 void init_close2GL() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(450, 0);
@@ -335,7 +331,6 @@ void init_close2GL() {
 	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 	glutDisplayFunc(close2glDisplay);
 	glutReshapeFunc(close2glReshape);
-	glutKeyboardFunc(myKeyboard);
 
 	//glutIdleFunc(myGlutIdle);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -449,17 +444,8 @@ void set_lighting(int control) {
 	glutPostRedisplay();
 }
 
-// This creates the spinning of the cube.
-static void TimeEvent(int te)
-{
-	glutSetWindow(win_id[OPENGL_WINDOW]);
-	glutPostRedisplay();  // Update screen with new rotation data
 
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
-	glutPostRedisplay();  // Update screen with new rotation data
 
-	glutTimerFunc(100, TimeEvent, 1);  // Reset our timmer.
-}
 
 
 int main(int argc, char *argv[])
@@ -468,9 +454,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	init_openGL();
 	init_close2GL();
-	glutTimerFunc(10, TimeEvent, 1);
-
-
+	
 	/****************************************/
 	/*         Here's the GLUI code         */
 	/****************************************/
