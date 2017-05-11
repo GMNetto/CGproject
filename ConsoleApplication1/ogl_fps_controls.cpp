@@ -93,26 +93,14 @@ void myKeyboard(unsigned char key, int x, int y)
 //*******************************************************************************
 void close2glReshape(int w, int h)
 {
+	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+	gluOrtho2D(0, 1, 0, 1);
 	glMatrixMode(GL_MODELVIEW);
-	//
-	// create a projection matrix for your close2gl implementation using the initial parameters
-	// yfov, aspect ratio, Znear, Zfar. Remember that the projection matrix is defined in terms of
-	// left, right, bottom, top, near and far. So, you will need to recover left, right, bottom and top
-	// from near and from Hfov and Vfov in your function.
-	//
-	//<close2gl projection matrix>.<your function to create a projection matrix>(Vfov, Hfov / Vfov, Znear, Zfar);
-	//projection_close2GLnew->setProjection(cam.getNearDist(), cam.getFarDist(), );
-	//
-	// create a viewport matrix for your close2gl implementation. Use the same (x,y) range specified in glOrtho
-	// above. See the tips on how to create a viewport matrix in the document that describes the programming
-	// assignment.
-	//
-	viewPort_close2GL->setViewPort(1.0, 1.0, -1.0, -1.0);
-	//<close2gl viewport matrix>.<your function to create a viewport matrix>(0.0, 1.0, 0.0, 1.0);
+	viewPort_close2GL->setViewPort(1, 1);
+	glutSetWindow(win_id[OPENGL_WINDOW]);
 }
 
 
@@ -142,9 +130,6 @@ void display_face(const face& face) {
 	glVertex3f(face.v0.pos.x, face.v0.pos.y, face.v0.pos.z);
 	glVertex3f(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z);
 	glVertex3f(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z);
-	//glVertex3f(100, 0, 0);
-	//glVertex3f(0, 0, 0);
-	//glVertex3f(0, 100, 0);
 	glEnd();
 }
 
@@ -158,11 +143,9 @@ int lighting = 1, clock = 1;
 void display_object() {
 	//glutSetWindow(win_id[OPENGL_WINDOW]);
 
-
-	//  clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	cam.setShape(zoom_spinner->get_int_val(), 640.0f / 480.0f, near_spinner->get_int_val(), far_spinner->get_int_val());
+	cam.setShape(zoom_spinner->get_int_val(), 1, near_spinner->get_int_val(), far_spinner->get_int_val());
 
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -222,35 +205,31 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 	Matrix projected_v1 = proj_view.vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	Matrix projected_v2 = proj_view.vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-	//	return;
+	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+		return;
 
 	projected_v0.normalize_vertex_project();
 	projected_v1.normalize_vertex_project();
 	projected_v2.normalize_vertex_project();
 
-	Matrix viewport_v0 = viewModel_close2GL->multiply_new(projected_v0);
-	Matrix viewport_v1 = viewModel_close2GL->multiply_new(projected_v1);
-	Matrix viewport_v2 = viewModel_close2GL->multiply_new(projected_v2);
+	Matrix viewport_v0 = viewPort_close2GL->multiply_new(projected_v0);
+	Matrix viewport_v1 = viewPort_close2GL->multiply_new(projected_v1);
+	Matrix viewport_v2 = viewPort_close2GL->multiply_new(projected_v2);
 
 	//Clipping
 	//(face.face_normal.x, face.face_normal.y, face.face_normal.z);
-	glVertex2f(viewport_v0.get_data(0,0), viewport_v0.get_data(0, 1));
-	glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(0, 1));
-	glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(0, 1));
-	glVertex2f(0, 1);
-	glVertex2f(0, 0);
-	glVertex2f(1, 0);
+	glVertex2f(viewport_v0.get_data(0, 0), viewport_v0.get_data(1, 0));
+	glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(1, 0));
+	glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(1, 0));
+
 }
 
 void close2glDisplay(void)
 {
-//	<set a model view matrix based on the most current camera parameters to be used in your rendering>
-//		<tri model>.<your close2gl renderer> (<render mode>, <clip mode>);
 
-	//glutSetWindow(win_id[CLOSE2GL_WINDOW]);
+	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 
-	cam.setShape(zoom_spinner->get_int_val(), 640.0f / 480.0f, near_spinner->get_int_val(), far_spinner->get_int_val());
+	cam.setShape(zoom_spinner->get_int_val(), 1, near_spinner->get_int_val(), far_spinner->get_int_val());
 
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -292,6 +271,7 @@ void close2glDisplay(void)
 
 	Point3 eye = cam.get_eye();
 	Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
+	//proje_view.transpose();
 	for (int i = 0; i < object->number_triangles; ++i) {
 		display_faces_close2GL(proje_view, object->faces[i]);
 	}
@@ -307,8 +287,6 @@ int main_window = 1, wireframe = 0, segments = 8;
 
 void myGlutIdle(void)
 {
-	//if (glutGetWindow() != main_window)
-	//	glutSetWindow(main_window);
 
 	glutPostRedisplay();
 }
@@ -317,27 +295,23 @@ void myGlutIdle(void)
 void init_close2GL() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(450, 0);
-	glutInitWindowSize(640, 480);
+	glutInitWindowSize(500, 500);
 	win_id[CLOSE2GL_WINDOW] = glutCreateWindow("Close2GL");
 	init_settings(object);
-	//glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 	glutDisplayFunc(close2glDisplay);
 	glutReshapeFunc(close2glReshape);
 
-	//glutIdleFunc(myGlutIdle);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_ALPHA);
-	glClearColor(0.0, 0.0, 0.0, 1);
+	glClearColor(0.3, 0.3, 0.3, 1);
 	glEnable(GL_DEPTH_TEST);
 
-	Point3 eye = cam.get_eye();
+	projection_close2GLnew->setProjection(cam.getNearDist(), cam.getFarDist(), 45.0f, 1);
 
-	projection_close2GLnew->setProjection(cam.getNearDist(), cam.getFarDist(), 45.0f, 640.0f/480.0f);
-	viewPort_close2GL->setViewPort(1.0, 1.0, 0.0, 0.0);
+	viewPort_close2GL->setViewPort(1, 1);
 	cam.setModelViewMatrix();
-	cam.setShape(45.0f, 640.0f / 480.0f, Znear, Zfar);
+	cam.setShape(45.0f, 1, Znear, Zfar);
 
-	//glutSetWindow(win_id[OPENGL_WINDOW]);
 }
 
 void init_openGL() {
@@ -348,19 +322,17 @@ void init_openGL() {
 	g_vEye = { avg_x, avg_y, float((avg_z)+maximum_side) };
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(640, 480);
+	glutInitWindowSize(500, 500);
 	win_id[OPENGL_WINDOW] = glutCreateWindow("OpenGL");
 	init_settings(object);
 	glutKeyboardFunc(myKeyboard);
 	glutDisplayFunc(display_object);
 	glutReshapeFunc(openglReshape);
-	//glutIdleFunc(myGlutIdle);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	gluLookAt(avg_x, avg_y, -avg_z + maximum_side, avg_x, avg_y, avg_z, 0, 0, 1);
-	cam.set(Point3(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1), Point3(avg_x, avg_y, avg_z), Vector3(0, 0, 1));
+	cam.set(Point3(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1), Point3(avg_x, avg_y, avg_z), Vector3(0, 1, 0));
 	centered_position = vector_3d(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1);
 	centered_orientation = vector_3d(avg_x, avg_y, avg_z);
-	cam.setShape(45.0f, 640.0f / 480.0f, Znear, Zfar);
+	cam.setShape(45.0f,1, Znear, Zfar);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 }
 
@@ -373,10 +345,10 @@ void reload_file(int control) {
 	float avg_z = (max_pos.z + min_pos.z) / 2;
 	float maximum_side = std::max((max_pos.x - min_pos.x), (max_pos.y - min_pos.y));
 	g_vEye = { avg_x, avg_y, float((avg_z)+maximum_side) };     // Eye Position
-	gluLookAt(avg_x, avg_y, -avg_z + maximum_side, avg_x, avg_y, avg_z, 0, 0, 1);
-	cam.set(Point3(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1), Point3(avg_x, avg_y, avg_z), Vector3(0, 0, 1));
+	gluLookAt(avg_x, avg_y, -avg_z + maximum_side, avg_x, avg_y, avg_z, 0, 1, 0);
+	cam.set(Point3(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1), Point3(avg_x, avg_y, avg_z), Vector3(0, 1, 0));
 	//cam.set(Point3(0.1, 10, 0.1), Point3(0, 0, -3), Vector3(0, 0, 1));
-	cam.setShape(45.0f, 640.0f / 480.0f, Znear, Zfar);
+	cam.setShape(45.0f, 1, Znear, Zfar);
 	glutSwapBuffers();
 	glutPostRedisplay(); // draw it again
 	glClearColor(0.35f, 0.53f, 0.7f, 1.0f);
@@ -393,7 +365,7 @@ void follow(int control) {
 
 void reset(int control) {
 	cam.set(Point3(centered_position.x, centered_position.y, centered_position.z),
-		Point3(centered_orientation.x, centered_orientation.y, centered_orientation.z), Vector3(0, 0, 1));
+		Point3(centered_orientation.x, centered_orientation.y, centered_orientation.z), Vector3(0, 1, 0));
 }
 
 void set_clock(int control) {
@@ -410,18 +382,18 @@ void set_clock(int control) {
 
 
 void change_near(int control) {
-	cam.setShape(45.0f, 640.0f / 480.0f, near_spinner->get_int_val(), cam.getFarDist());
+	cam.setShape(45.0f, 1, near_spinner->get_int_val(), cam.getFarDist());
 }
 
 void change_far(int control) {
-	cam.setShape(45.0f, 640.0f / 480.0f, cam.getNearDist(), far_spinner->get_int_val());
+	cam.setShape(45.0f, 1, cam.getNearDist(), far_spinner->get_int_val());
 }
 
 GLUI_Spinner *red_spinner, *green_spinner, *blue_spinner;
 
 
 void change_zoom(int control) {
-	cam.setShape(zoom_spinner->get_int_val(), 640.0f / 480.0f, cam.getNearDist(), cam.getFarDist());
+	cam.setShape(zoom_spinner->get_int_val(), 1, cam.getNearDist(), cam.getFarDist());
 	glutPostRedisplay();
 }
 
@@ -473,7 +445,7 @@ int main(int argc, char *argv[])
 
 	near_spinner =
 		glui->add_spinner("Near:", GLUI_SPINNER_INT, &near_val, 1, change_near);
-	near_spinner->set_int_limits(0, 10);
+	near_spinner->set_int_limits(1, 10);
 
 	far_spinner =
 		glui->add_spinner("Far:", GLUI_SPINNER_INT, &far_val, 1, change_far);

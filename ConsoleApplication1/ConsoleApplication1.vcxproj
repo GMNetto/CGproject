@@ -22,6 +22,7 @@
     <ProjectGuid>{DF9DB496-5FB3-4CD8-A25D-4960AB2A3610}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConsoleApplication1</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -33,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -73,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

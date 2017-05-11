@@ -16,7 +16,7 @@ public:
 
 	void setProjection(float near_d, float far_d, float aspect, float fovy);
 
-	void setViewPort(float rv, float tv, float lv, float bv);
+	void setViewPort(float width, float height);
 
 	float get_data(int i, int j) {
 		return data[i][j];
@@ -26,14 +26,29 @@ public:
 		data[i][j] = value;
 	}
 
+	void transpose() {
+		for (size_t i = 0; i < 4; i++)
+		{
+			for (size_t j = i+1; j < 4; j++)
+			{
+				float temp = this->data[i][j];
+				this->data[i][j] = this->data[j][i];
+				this->data[j][i] = temp;
+			}
+		}
+	}
+
 	void normalize_vertex_project() {
 		this->set_data(0, 0, this->get_data(0, 0) / this->get_data(3, 0));
+		this->set_data(1, 0, this->get_data(1, 0) / this->get_data(3, 0));
+		this->set_data(2, 0, this->get_data(2, 0) / this->get_data(3, 0));
+		this->set_data(3, 0, this->get_data(3, 0) / this->get_data(3, 0));
 	}
 
 	bool check_vertex_projected() {
 		return (abs(get_data(0, 0)) < abs(get_data(3, 0))
-			|| abs(get_data(1, 0)) < abs(get_data(3, 0))
-			|| abs(get_data(2, 0)) < abs(get_data(3, 0)));
+			&& abs(get_data(1, 0)) < abs(get_data(3, 0))
+			&& abs(get_data(2, 0)) < abs(get_data(3, 0)));
 		//return std::abs(get_data(3, 0)) < 0.000001 ;
 	}
 

@@ -78,13 +78,6 @@ inline void Camera::setModelViewMatrix()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glLoadMatrixf(m); // load OpenGL’s modelview matrix
-
-	/*for (int i = 0; i < size_w; i++)
-	{
-		glutSetWindow(windows[i]);
-		glutPostRedisplay();
-	}*/
-	//glutSetWindow(windows[0]);
 }
 
 
