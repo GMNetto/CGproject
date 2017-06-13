@@ -6,11 +6,13 @@
 
 #define MAX_MATERIAL_COUNT 10
 
+
+
 void init_settings(Tri_model* object)
 {
 	GLfloat mat_specular[] = { object->specular_color[0].x, object->specular_color[0].y, object->specular_color[0].z, 1.0 };
 	GLfloat *mat_shininess = object->shine; //{ 50.0 };
-	GLfloat light_position[] = { 0.0, 0.0, 1.0, 0 };
+	GLfloat light_position[] = { 0.0, 0.0, 1.0, 1.0 };
 	GLfloat ambient[] = { object->ambient_color[0].x, object->ambient_color[0].y, object->ambient_color[0].z, 1.0 };
 
 	GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };

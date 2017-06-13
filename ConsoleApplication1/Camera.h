@@ -51,12 +51,16 @@ public:
 		return eye;
 	}
 
+	Point3 get_look() {
+		return look;
+	}
+
 	void setModelViewMatrix();
 
 	
 
 private:
-	int follow = 0;
+	int follow = 1;
 	Point3 eye, look;
 	Vector3 u, v, n;
 	int hfov = 60, vfov = 60;

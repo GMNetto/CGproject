@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <iostream>
 
 void Camera::set(Point3 eye, Point3 look, Vector3 up) {
 	this->eye.set(eye);
@@ -21,6 +22,7 @@ void Camera::set_looking_same_point(Point3 eye, Vector3 up) {
 
 void Camera::slide(float delU, float delV, float delN)
 {
+	std::cout << "Slide" << std::endl;
 	eye.x += delU * u.x + delV * v.x + delN * n.x;
 	eye.y += delU * u.y + delV * v.y + delN * n.y;
 	eye.z += delU * u.z + delV * v.z + delN * n.z;
@@ -47,8 +49,6 @@ void Camera::pitch(float angle)
 	Vector3 t(v); // remember old u
 	v.set(cs*t.x - sn*n.x, cs*t.y - sn*n.y, cs*t.z - sn*n.z);
 	n.set(sn*t.x + cs*n.x, sn*t.y + cs*n.y, sn*t.z + cs*n.z);
-	//n.normalize();
-	//this->look.set(Point3(n.x, n.y, n.z));
 	setModelViewMatrix();
 }
 
@@ -59,14 +59,10 @@ void Camera::yaw(float angle)
 	Vector3 t(n); // remember old u
 	n.set(cs*t.x - sn*u.x, cs*t.y - sn*u.y, cs*t.z - sn*u.z);
 	u.set(sn*t.x + cs*u.x, sn*t.y + cs*u.y, sn*t.z + cs*u.z);
-	//n.normalize();
-	//this->look.set(Point3(n.x, n.y, n.z));
 	setModelViewMatrix();
 }
 
 void Camera::setShape(float vAng, float asp, float nearD, float farD) {
-	GLfloat model[16];
-	glGetFloatv(GL_PROJECTION_MATRIX, model);
 	this->viewAngle = vAng;
 	this->aspect = asp;
 	if (nearD > 0)
@@ -78,7 +74,4 @@ void Camera::setShape(float vAng, float asp, float nearD, float farD) {
 	gluPerspective(viewAngle, aspect, nearDist, farDist);
 	glMatrixMode(GL_MODELVIEW);
 	this->projection_close2GLnew->setProjection(nearD, farD, asp, vAng);
-	glGetFloatv(GL_PROJECTION_MATRIX, model);
-
-	//glLoadIdentity();
 }

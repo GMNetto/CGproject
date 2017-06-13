@@ -1,6 +1,12 @@
 #pragma once
 
 #include <math.h>
+#include <glui.h>
+
+//GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+//GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+//GLfloat LightPosition[] = { 5.0f, 5.0f, -10.0f, 1.0f };
+
 
 typedef struct vector_3d {
 	float x, y, z;
@@ -11,6 +17,33 @@ typedef struct vector_3d {
 		this->x = x;
 		this->y = y;
 		this->z = z;
+	}
+
+	float dot(const vector_3d& other) {
+		return x*other.x + y*other.y + z*other.z;
+	}
+
+	vector_3d operator*(float factor) {
+		return vector_3d(x*factor, y*factor, z*factor);
+	}
+
+	vector_3d operator+(const vector_3d& other) {
+		return vector_3d(x + other.x, y + other.y, z + other.z);
+	}
+
+	vector_3d operator-(const vector_3d& other) {
+		return vector_3d(x - other.x, y - other.y, z - other.z);
+	}
+
+	vector_3d operator/(float other) {
+		return vector_3d(x / other, y / other, z / other);
+	}
+
+	void normalize() {
+		float norm = sqrt(x*x + y*y + z*z);
+		x = x / norm;
+		y = y / norm;
+		z = z / norm;
 	}
 
 }vector_3d;

@@ -46,10 +46,9 @@ public:
 	}
 
 	bool check_vertex_projected() {
-		return (abs(get_data(0, 0)) < abs(get_data(3, 0))
-			&& abs(get_data(1, 0)) < abs(get_data(3, 0))
-			&& abs(get_data(2, 0)) < abs(get_data(3, 0)));
-		//return std::abs(get_data(3, 0)) < 0.000001 ;
+		return (abs(get_data(0, 0)) > abs(get_data(3, 0))
+			|| abs(get_data(1, 0)) > abs(get_data(3, 0))
+			|| abs(get_data(2, 0)) > abs(get_data(3, 0)));
 	}
 
 private:

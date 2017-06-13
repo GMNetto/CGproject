@@ -1,4 +1,25 @@
-﻿  Matrix.cpp
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\matrix.cpp(83): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  ogl_fps_controls.cpp
+c:\users\gustavo\desktop\glui-2.35\glui-2.35\src\include\gl\glui.h(868): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\camera.h(21): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(84): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(85): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(86): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(64): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(66): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(67): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(68): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(69): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(70): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(152): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(345): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(378): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(399): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(415): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(423): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(451): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(455): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(462): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(481): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(487): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   ConsoleApplication1.vcxproj -> C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
   ConsoleApplication1.vcxproj -> C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\x64\Debug\ConsoleApplication1.pdb (Full PDB)

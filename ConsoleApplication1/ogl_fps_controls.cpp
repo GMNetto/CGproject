@@ -12,6 +12,7 @@
 #include <string.h>
 #include "Matrix.h"
 #include "Util.h"
+#include "Triangle.h"
 
 #define OPENGL_WINDOW 0
 #define CLOSE2GL_WINDOW 1
@@ -52,9 +53,8 @@ bool first = true;
 float red = 0, green = 0, blue = 0;
 
 
-
- // global camera object
-			//<<<<<<<<<<<<<<<<<<<<<<<< myKeyboard >>>>>>>>>>>>>>>>>>>>>>
+// global camera object
+//<<<<<<<<<<<<<<<<<<<<<<<< myKeyboard >>>>>>>>>>>>>>>>>>>>>>
 void myKeyboard(unsigned char key, int x, int y)
 {
 	switch (key)
@@ -78,9 +78,10 @@ void myKeyboard(unsigned char key, int x, int y)
 	case 'y' - 32: cam.yaw(1.0); break;
 		// add roll and yaw controls
 	}
-	
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
+
 	cam.setModelViewMatrix();
+
+	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
 	glutPostRedisplay();
 	glutSetWindow(win_id[OPENGL_WINDOW]);
 	glutPostRedisplay(); // draw it again
@@ -93,24 +94,12 @@ void myKeyboard(unsigned char key, int x, int y)
 //*******************************************************************************
 void close2glReshape(int w, int h)
 {
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, 1, 0, 1);
-	glMatrixMode(GL_MODELVIEW);
-	viewPort_close2GL->setViewPort(1, 1);
-	glutSetWindow(win_id[OPENGL_WINDOW]);
+	gluOrtho2D(0, (GLsizei)w, 0, (GLsizei)h);
 }
 
 
-//***********************************************
-//
-//  OpenGL Reshape function
-//
-//  Sets the viewport and the projection matrix
-//  
-//***********************************************
 void openglReshape(int w, int h)
 {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
@@ -123,30 +112,45 @@ void display_face(const face& face) {
 	//GLfloat diffuse[] = { face.diffuse_color.x, face.diffuse_color.y, face.diffuse_color.z };
 	GLfloat diffuse[] = { red_color, green_color, blue_color, 1 };
 	//glColor3f(face.diffuse_color.x, face.diffuse_color.y, face.diffuse_color.z);
-	glColor3f(red_color, green_color, blue_color);
+	//glColor3f(red_color, green_color, blue_color);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 	glBegin(GL_TRIANGLES);
-	glNormal3f(face.face_normal.x, face.face_normal.y, face.face_normal.z);
+	glNormal3f(face.v0.normal.x, face.v0.normal.y, face.v0.normal.z);
 	glVertex3f(face.v0.pos.x, face.v0.pos.y, face.v0.pos.z);
+	glNormal3f(face.v1.normal.x, face.v1.normal.y, face.v1.normal.z);
 	glVertex3f(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z);
+	glNormal3f(face.v2.normal.x, face.v2.normal.y, face.v2.normal.z);
 	glVertex3f(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z);
 	glEnd();
 }
 
-int zoom = 45;
-GLUI_Spinner *zoom_spinner;
+int zoom = 45, zoom2 = 45;
+GLUI_Spinner *zoom_spinner, *zoom_spinner2;
 GLUI_Spinner *near_spinner;
 GLUI_Spinner *far_spinner;
+
+
+vector_3d illumination(0, 1, 1), illumination_color(1, 1, 1), ambient(0.3f , 0.3f, 0.3f);
+GLUI_Spinner *ambient_light_r;
+GLUI_Spinner *ambient_light_g;
+GLUI_Spinner *ambient_light_b;
+
+GLUI_Spinner *illumination_r;
+GLUI_Spinner *illumination_g;
+GLUI_Spinner *illumination_b;
+
+GLUI_Spinner *illumination_dir_x;
+GLUI_Spinner *illumination_dir_y;
+GLUI_Spinner *illumination_dir_z;
 
 int far_val, near_val;
 int lighting = 1, clock = 1;
 void display_object() {
-	//glutSetWindow(win_id[OPENGL_WINDOW]);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	cam.setShape(zoom_spinner->get_int_val(), 1, near_spinner->get_int_val(), far_spinner->get_int_val());
-
+	cam.setShape(zoom_spinner->get_int_val(), zoom_spinner2->get_int_val() / zoom_spinner->get_int_val(), near_spinner->get_int_val(), far_spinner->get_int_val());
+	cam.setModelViewMatrix();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (primitives == 1)
@@ -185,6 +189,8 @@ void display_object() {
 	for (int i = 0; i < object->number_triangles; ++i) {
 		display_face(object->faces[i]);
 	}
+	//display_face(object->faces[5]);
+	//display_face(object->faces[1]);
 
 	glEnd();
 
@@ -200,17 +206,47 @@ void display_object() {
 //
 //*******************************************************************************
 
-void display_faces_close2GL(Matrix& proj_view, const face& face) {
+char *color_buffer;
+char **z_buffer;
+
+void set_zero() {
+	for (size_t i = 0; i < 500; i++)
+	{
+		for (size_t j = 0; j < 500; j++)
+		{
+			z_buffer[i][j] = 1;
+			for (size_t k = 0; k < 3; k++)
+			{
+				color_buffer[3*i + 3 * 500 * j + k] = 100;
+			}
+		}
+	}
+}
+
+void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Triangle>& triangles) {
+
 	Matrix projected_v0 = proj_view.vector2matrix(Vector3(face.v0.pos.x, face.v0.pos.y, face.v0.pos.z));
 	Matrix projected_v1 = proj_view.vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	Matrix projected_v2 = proj_view.vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-		return;
+	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+	//	return;
 
 	projected_v0.normalize_vertex_project();
 	projected_v1.normalize_vertex_project();
 	projected_v2.normalize_vertex_project();
+
+	//Matrix world_v0 = viewModel_close2GL->vector2matrix(Vector3(face.v0.pos.x, face.v0.pos.y, face.v0.pos.z));
+	//Matrix world_v1 = viewModel_close2GL->vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
+	//Matrix world_v2 = viewModel_close2GL->vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
+
+	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+	//	return;
+
+	//world_v0.normalize_vertex_project();
+	//world_v1.normalize_vertex_project();
+	//world_v2.normalize_vertex_project();
+
 
 	Matrix viewport_v0 = viewPort_close2GL->multiply_new(projected_v0);
 	Matrix viewport_v1 = viewPort_close2GL->multiply_new(projected_v1);
@@ -218,19 +254,28 @@ void display_faces_close2GL(Matrix& proj_view, const face& face) {
 
 	//Clipping
 	//(face.face_normal.x, face.face_normal.y, face.face_normal.z);
-	glVertex2f(viewport_v0.get_data(0, 0), viewport_v0.get_data(1, 0));
-	glVertex2f(viewport_v1.get_data(0, 0), viewport_v1.get_data(1, 0));
-	glVertex2f(viewport_v2.get_data(0, 0), viewport_v2.get_data(1, 0));
+	//glVertex2f(projected_v0.get_data(0, 0), projected_v0.get_data(1, 0));
+	//glVertex2f(projected_v1.get_data(0, 0), projected_v1.get_data(1, 0));
+	//glVertex2f(projected_v2.get_data(0, 0), projected_v2.get_data(1, 0));
+
+	//Usar da viewport matrix, não da perspectiva
+
+	vertex v0(vector_3d(viewport_v0.get_data(0, 0), viewport_v0.get_data(1, 0), viewport_v0.get_data(2, 0)),
+		vector_3d(red, green, blue), face.v0.normal,
+		face.v0.pos);
+	vertex v1(vector_3d(viewport_v1.get_data(0, 0), viewport_v1.get_data(1, 0), viewport_v1.get_data(2, 0)),
+		vector_3d(red, green, blue), face.v1.normal,
+		face.v1.pos);
+	vertex v2(vector_3d(viewport_v2.get_data(0, 0), viewport_v2.get_data(1, 0), viewport_v2.get_data(2, 0)),
+		vector_3d(red, green, blue), face.v2.normal,
+		face.v2.pos);
+	Triangle* t = new Triangle(v0, v1, v2, z_buffer, color_buffer, 500, 500);
+	triangles.push_back(*t);
 
 }
 
 void close2glDisplay(void)
 {
-
-	glutSetWindow(win_id[CLOSE2GL_WINDOW]);
-
-	cam.setShape(zoom_spinner->get_int_val(), 1, near_spinner->get_int_val(), far_spinner->get_int_val());
-
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -266,23 +311,51 @@ void close2glDisplay(void)
 	{
 		glColor3f(red, green, blue);
 	}
+	glEnable(GL_DEPTH_TEST);
 
 	glBegin(GL_TRIANGLES);
 
-	Point3 eye = cam.get_eye();
 	Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
-	//proje_view.transpose();
+	
+
+	std::vector<Triangle> triangles;
+	triangles.reserve(object->number_triangles);
+	//set_zero();
+
+
+
+	set_zero();
+
+
 	for (int i = 0; i < object->number_triangles; ++i) {
-		display_faces_close2GL(proje_view, object->faces[i]);
+		display_faces_close2GL(proje_view, object->faces[i], triangles);
+	}
+	//display_faces_close2GL(proje_view, object->faces[10], triangles);
+	//display_faces_close2GL(proje_view, object->faces[11], triangles);
+	//display_faces_close2GL(proje_view, object->faces[0], triangles);
+	//display_faces_close2GL(proje_view, object->faces[1], triangles);
+
+	for (size_t i = 0; i < object->number_triangles; i++)
+	{
+
+		Point3 look = cam.get_eye();
+		vector_3d cam_pos = vector_3d(look.x, look.y, look.z);
+		triangles[i].set_illumination_settings(ambient, illumination_color, illumination, cam_pos);
+		triangles[i].set_mode(primitives);
+		triangles[i].set_lighting(lighting);
+		if (lighting)
+			triangles[i].set_lighting_colors();
+		triangles[i].rasterize_triangle();
 	}
 
-
+	
 	glEnd();
-
+	glDrawPixels(500, 500, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
+	
 	glutSwapBuffers();
 }
 
-int main_window = 1, wireframe = 0, segments = 8;
+int main_window = 1, wireframe = 1, segments = 8;
 
 
 void myGlutIdle(void)
@@ -302,16 +375,8 @@ void init_close2GL() {
 	glutReshapeFunc(close2glReshape);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_ALPHA);
 	glClearColor(0.3, 0.3, 0.3, 1);
 	glEnable(GL_DEPTH_TEST);
-
-	projection_close2GLnew->setProjection(cam.getNearDist(), cam.getFarDist(), 45.0f, 1);
-
-	viewPort_close2GL->setViewPort(1, 1);
-	cam.setModelViewMatrix();
-	cam.setShape(45.0f, 1, Znear, Zfar);
-
 }
 
 void init_openGL() {
@@ -329,10 +394,11 @@ void init_openGL() {
 	glutDisplayFunc(display_object);
 	glutReshapeFunc(openglReshape);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	cam.set(Point3(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1), Point3(avg_x, avg_y, avg_z), Vector3(0, 1, 0));
+	glShadeModel(GL_SMOOTH);
+	cam.set(Point3(avg_x, avg_y, -avg_z + maximum_side), Point3(avg_x, avg_y, avg_z), Vector3(0, 1, 0));
 	centered_position = vector_3d(avg_x + 0.1, avg_y + 0.1, -avg_z + maximum_side + 0.1);
 	centered_orientation = vector_3d(avg_x, avg_y, avg_z);
-	cam.setShape(45.0f,1, Znear, Zfar);
+	cam.setShape(45.0f, 1, Znear, Zfar);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 }
 
@@ -393,7 +459,7 @@ GLUI_Spinner *red_spinner, *green_spinner, *blue_spinner;
 
 
 void change_zoom(int control) {
-	cam.setShape(zoom_spinner->get_int_val(), 1, cam.getNearDist(), cam.getFarDist());
+	cam.setShape(zoom_spinner->get_int_val(), zoom_spinner2->get_int_val() / zoom_spinner->get_int_val(), cam.getNearDist(), cam.getFarDist());
 	glutPostRedisplay();
 }
 
@@ -411,22 +477,63 @@ void set_lighting(int control) {
 }
 
 
+void change_ambient(int control) {
+	ambient = vector_3d(ambient_light_r->get_int_val(), ambient_light_g->get_int_val(), ambient_light_b->get_int_val());
+	GLfloat LightAmbient[] = { ambient.x, ambient.y, ambient.z, 1.0f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, LightAmbient);
+}
 
+void change_illumination(int control) {
+	illumination_color = vector_3d(illumination_r->get_int_val(), illumination_g->get_int_val(), illumination_b->get_int_val());
+}
 
+void change_illumination_dir(int control) {
+	illumination = vector_3d(illumination_dir_x->get_float_val(),
+		illumination_dir_y->get_float_val(), illumination_dir_z->get_float_val());
+	illumination.normalize();
+	GLfloat light_position[] = { illumination.x, illumination.y, illumination.z, 1.0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+}
 
 int main(int argc, char *argv[])
 {
-	object = reading_input_file("cube.in", &max_pos, &min_pos);
+
+	/*color_buffer = new char**[500];
+	z_buffer = new char *[500];
+	for (size_t i = 0; i < 500; i++)
+	{
+		color_buffer[i] = new char*[500];
+		z_buffer[i] = new char[500];
+		for (size_t j = 0; j < 500; j++)
+		{
+			color_buffer[i][j] = new char[3];
+		}
+	}
+
+	set_zero();*/
+
+	color_buffer = new char[500 * 500 * 3];
+	z_buffer = new char *[500];
+	for (size_t i = 0; i < 500; i++)
+	{
+		z_buffer[i] = new char[500];
+	}
+
+	object = reading_input_file("cow_up.in", &max_pos, &min_pos);
 	glutInit(&argc, argv);
 	init_openGL();
 	init_close2GL();
-	
+
+	viewPort_close2GL->setViewPort(500, 500);
+
 	/****************************************/
 	/*         Here's the GLUI code         */
 	/****************************************/
 
-	GLUI *glui = GLUI_Master.create_glui_subwindow(win_id[OPENGL_WINDOW],
-		GLUI_SUBWINDOW_RIGHT);
+	//GLUI *glui = GLUI_Master.create_glui_subwindow(win_id[OPENGL_WINDOW],
+	//	GLUI_SUBWINDOW_RIGHT);
+
+	GLUI *glui = GLUI_Master.create_glui("GLUI");
 
 	file = glui->add_edittext("File path", 1, file_model);
 	glui->add_button("Load file", 1, reload_file);
@@ -440,6 +547,9 @@ int main(int argc, char *argv[])
 	glui->add_checkbox("Lighting", &lighting, 1, set_lighting);
 
 	zoom_spinner = glui->add_spinner("Zoom", GLUI_SPINNER_INT, &zoom, 1, change_zoom);
+	zoom_spinner->set_int_limits(0, 180);
+
+	zoom_spinner2 = glui->add_spinner("Zoom", GLUI_SPINNER_INT, &zoom2, 1, change_zoom);
 	zoom_spinner->set_int_limits(0, 180);
 
 
@@ -458,6 +568,26 @@ int main(int argc, char *argv[])
 	blue_spinner = glui->add_spinner("Blue", GLUI_SPINNER_FLOAT, &blue, 1);
 	blue_spinner->set_float_limits(0, 1);
 
+	ambient_light_r = glui->add_spinner("Ambient R", GLUI_SPINNER_FLOAT, &ambient.x, 1, change_ambient);
+	ambient_light_r->set_float_limits(0, 1);
+	ambient_light_g = glui->add_spinner("Ambient G", GLUI_SPINNER_FLOAT, &ambient.y, 1, change_ambient);
+	ambient_light_g->set_float_limits(0, 1);
+	ambient_light_b = glui->add_spinner("Ambient B", GLUI_SPINNER_FLOAT, &ambient.z, 1, change_ambient);
+	ambient_light_b->set_float_limits(0, 1);
+
+	illumination_r = glui->add_spinner("Illumination R", GLUI_SPINNER_FLOAT, &illumination_color.x, 1, change_illumination);
+	illumination_r->set_float_limits(0, 1);
+	illumination_g = glui->add_spinner("Illumination G", GLUI_SPINNER_FLOAT, &illumination_color.y, 1, change_illumination);
+	illumination_g->set_float_limits(0, 1);
+	illumination_b = glui->add_spinner("Illumination B", GLUI_SPINNER_FLOAT, &illumination_color.z, 1, change_illumination);
+	illumination_b->set_float_limits(0, 1);
+
+	illumination_dir_x = glui->add_spinner("Illumination x", GLUI_SPINNER_FLOAT, &illumination.x, 1, change_illumination_dir);
+	illumination_dir_x->set_float_limits(-1000, 1000);
+	illumination_dir_y = glui->add_spinner("Illumination y", GLUI_SPINNER_FLOAT, &illumination.y, 1, change_illumination_dir);
+	illumination_dir_y->set_float_limits(-1000, 1000);
+	illumination_dir_z = glui->add_spinner("Illumination z", GLUI_SPINNER_FLOAT, &illumination.z, 1, change_illumination_dir);
+	illumination_dir_z->set_float_limits(-1000, 1000);
 
 	GLUI_Panel *obj_panel = glui->add_panel("Primitives");
 	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(obj_panel, &primitives, 1);

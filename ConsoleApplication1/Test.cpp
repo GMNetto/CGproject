@@ -30,9 +30,9 @@
 
 
 // lighting
-GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-GLfloat LightPosition[] = { 5.0f, 5.0f, -10.0f, 1.0f };
+//GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+//GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+//GLfloat LightPosition[] = { 5.0f, 5.0f, -10.0f, 1.0f };
 GLfloat mat_specular[] = { 0.2, 0.2, 0.2, 1.0 };
 
 int window_1, window_2;

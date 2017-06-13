@@ -45,7 +45,7 @@ Matrix Matrix::multiply_new(const Matrix& matrix) {
 
 Matrix Matrix::vector2matrix(const Vector3& vector) {
 	float data[4][4];
-	float vector_4[4]{vector.x, vector.y, vector.z, 1};
+	float vector_4[4]{ vector.x, vector.y, vector.z, 1 };
 	for (size_t i = 0; i < 4; i++)
 	{
 		float accum = 0;
@@ -76,14 +76,12 @@ void Matrix::setModelView(Vector3& u, Vector3& v, Vector3& n, Vector3& eye) {
 	this->data[3][1] = 0;
 	this->data[3][2] = 0;
 	this->data[3][3] = 1;
-	this->transpose();
 }
 
 void Matrix::setProjection(float near_d, float far_d, float aspect, float fovy) {
-	float rad_fovy = ((3.14159265 / 180) * (fovy/2 ));
-	float f = cos(rad_fovy) / sin(rad_fovy);
-	this->data[0][0] = f/aspect;
-
+	float rad_fovy = ((3.14159265 / 180) * (fovy / 2));
+	float f = 1.0f / tan(rad_fovy);
+	this->data[0][0] = f / aspect;
 	this->data[0][1] = 0;
 	this->data[0][2] = 0;
 	this->data[0][3] = 0;
@@ -99,7 +97,6 @@ void Matrix::setProjection(float near_d, float far_d, float aspect, float fovy) 
 	this->data[3][1] = 0;
 	this->data[3][2] = -1;
 	this->data[3][3] = 0;
-	this->transpose();
 }
 
 void Matrix::setViewPort(float width, float height) {
@@ -108,7 +105,7 @@ void Matrix::setViewPort(float width, float height) {
 	this->data[0][2] = 0;
 	this->data[0][3] = (width) / 2;
 	this->data[1][0] = 0;
-	this->data[1][1] = -(height)/2;
+	this->data[1][1] = (height) / 2;
 	this->data[1][2] = 0;
 	this->data[1][3] = (height) / (2);
 	this->data[2][0] = 0;
@@ -119,5 +116,4 @@ void Matrix::setViewPort(float width, float height) {
 	this->data[3][1] = 0;
 	this->data[3][2] = 0;
 	this->data[3][3] = 1;
-	this->transpose();
 }
