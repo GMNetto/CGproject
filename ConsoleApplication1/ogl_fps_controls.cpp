@@ -13,6 +13,7 @@
 #include "Matrix.h"
 #include "Util.h"
 #include "Triangle.h"
+#include <corona.h>
 
 #define OPENGL_WINDOW 0
 #define CLOSE2GL_WINDOW 1
@@ -34,8 +35,11 @@ vector3f g_vRight(1.0f, 0.0f, 0.0f);   // Right Vector
 
 extern vector_3d max_pos = { -INFINITY, -INFINITY, -INFINITY };
 extern vector_3d min_pos = { INFINITY, INFINITY, INFINITY };
-char file_model[255] = "cube.in";
+char file_model[255] = "cube_text.in";
 int primitives = 0;
+int shading = 0;
+float attenuation = 0.5;
+int texture_mode = 0;
 vector_3d centered_position = { 0, 0, 0 }, centered_orientation = { 0, 0, 0 };
 
 float red_color = 0, green_color = 0, blue_color = 0;
@@ -51,6 +55,14 @@ GLUI_EditText *file;
 bool first = true;
 
 float red = 0, green = 0, blue = 0;
+
+int texture = 1;
+int perspective_correct = 1;
+
+corona::Image* image = corona::OpenImage("chessboard.jpg");
+unsigned char* texture_map = (unsigned char*)image->getPixels();
+
+GLuint texture_name;
 
 
 // global camera object
@@ -113,6 +125,10 @@ void display_face(const face& face) {
 	GLfloat diffuse[] = { red_color, green_color, blue_color, 1 };
 	//glColor3f(face.diffuse_color.x, face.diffuse_color.y, face.diffuse_color.z);
 	//glColor3f(red_color, green_color, blue_color);
+	if (texture)
+		glTexCoord2f(face.v0.texture.x, face.v0.texture.y);
+		glTexCoord2f(face.v1.texture.x, face.v1.texture.y);
+		glTexCoord2f(face.v2.texture.x, face.v2.texture.y);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 	glBegin(GL_TRIANGLES);
 	glNormal3f(face.v0.normal.x, face.v0.normal.y, face.v0.normal.z);
@@ -158,6 +174,9 @@ void display_object() {
 	else if (primitives == 2)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+	if (texture) {
+		glEnable(GL_TEXTURE_2D);
+	}
 
 	if (lighting) {
 		glEnable(GL_LIGHTING);
@@ -184,6 +203,13 @@ void display_object() {
 	{
 		glColor3f(red, green, blue);
 	}
+
+	if (texture) {
+		//texture_name = loadBMP_custom("chessboard.bmp");
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texture_name);
+	}
+
 	glBegin(GL_TRIANGLES);
 
 	for (int i = 0; i < object->number_triangles; ++i) {
@@ -193,6 +219,10 @@ void display_object() {
 	//display_face(object->faces[1]);
 
 	glEnd();
+
+	if (texture) {
+		glDisable(GL_TEXTURE_2D);
+	}
 
 	glutSwapBuffers();
 }
@@ -206,8 +236,8 @@ void display_object() {
 //
 //*******************************************************************************
 
-char *color_buffer;
-char **z_buffer;
+float *color_buffer;
+float **z_buffer;
 
 void set_zero() {
 	for (size_t i = 0; i < 500; i++)
@@ -229,8 +259,10 @@ void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Tri
 	Matrix projected_v1 = proj_view.vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	Matrix projected_v2 = proj_view.vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
+
 	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
 	//	return;
+	float w_s[3]{projected_v0.get_data(3, 0), projected_v1.get_data(3, 0), projected_v2.get_data(3, 0) };
 
 	projected_v0.normalize_vertex_project();
 	projected_v1.normalize_vertex_project();
@@ -240,8 +272,8 @@ void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Tri
 	//Matrix world_v1 = viewModel_close2GL->vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	//Matrix world_v2 = viewModel_close2GL->vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-	//	return;
+	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+		return;
 
 	//world_v0.normalize_vertex_project();
 	//world_v1.normalize_vertex_project();
@@ -252,28 +284,23 @@ void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Tri
 	Matrix viewport_v1 = viewPort_close2GL->multiply_new(projected_v1);
 	Matrix viewport_v2 = viewPort_close2GL->multiply_new(projected_v2);
 
-	//Clipping
-	//(face.face_normal.x, face.face_normal.y, face.face_normal.z);
-	//glVertex2f(projected_v0.get_data(0, 0), projected_v0.get_data(1, 0));
-	//glVertex2f(projected_v1.get_data(0, 0), projected_v1.get_data(1, 0));
-	//glVertex2f(projected_v2.get_data(0, 0), projected_v2.get_data(1, 0));
-
-	//Usar da viewport matrix, não da perspectiva
 
 	vertex v0(vector_3d(viewport_v0.get_data(0, 0), viewport_v0.get_data(1, 0), viewport_v0.get_data(2, 0)),
 		vector_3d(red, green, blue), face.v0.normal,
-		face.v0.pos);
+		face.v0.pos, w_s[0], face.v0.texture);
 	vertex v1(vector_3d(viewport_v1.get_data(0, 0), viewport_v1.get_data(1, 0), viewport_v1.get_data(2, 0)),
 		vector_3d(red, green, blue), face.v1.normal,
-		face.v1.pos);
+		face.v1.pos, w_s[1], face.v1.texture);
 	vertex v2(vector_3d(viewport_v2.get_data(0, 0), viewport_v2.get_data(1, 0), viewport_v2.get_data(2, 0)),
 		vector_3d(red, green, blue), face.v2.normal,
-		face.v2.pos);
-	Triangle* t = new Triangle(v0, v1, v2, z_buffer, color_buffer, 500, 500);
+		face.v2.pos, w_s[2], face.v2.texture);
+	Triangle* t = new Triangle(v0, v1, v2, z_buffer, color_buffer, 500, 500, face.face_normal);
 	triangles.push_back(*t);
 
 }
 
+
+//TODO: Clipping
 void close2glDisplay(void)
 {
 
@@ -313,7 +340,7 @@ void close2glDisplay(void)
 	}
 	glEnable(GL_DEPTH_TEST);
 
-	glBegin(GL_TRIANGLES);
+	//glBegin(GL_TRIANGLES);
 
 	Matrix proje_view = projection_close2GLnew->multiply_new(*viewModel_close2GL);
 	
@@ -343,14 +370,18 @@ void close2glDisplay(void)
 		triangles[i].set_illumination_settings(ambient, illumination_color, illumination, cam_pos);
 		triangles[i].set_mode(primitives);
 		triangles[i].set_lighting(lighting);
+		triangles[i].set_texture(texture_map, texture, 64, 64);
+		triangles[i].set_lighting_type(shading);
+		triangles[i].set_attenuation(attenuation);
+		triangles[i].set_texture_type(texture_mode);
 		if (lighting)
 			triangles[i].set_lighting_colors();
-		triangles[i].rasterize_triangle();
+		triangles[i].rasterize_triangle(perspective_correct);
 	}
 
 	
-	glEnd();
-	glDrawPixels(500, 500, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
+	//glEnd();
+	glDrawPixels(500, 500, GL_RGB, GL_FLOAT, color_buffer);
 	
 	glutSwapBuffers();
 }
@@ -366,13 +397,13 @@ void myGlutIdle(void)
 
 
 void init_close2GL() {
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(450, 0);
 	glutInitWindowSize(500, 500);
 	win_id[CLOSE2GL_WINDOW] = glutCreateWindow("Close2GL");
 	init_settings(object);
-	glutDisplayFunc(close2glDisplay);
 	glutReshapeFunc(close2glReshape);
+	glutDisplayFunc(close2glDisplay);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glClearColor(0.3, 0.3, 0.3, 1);
@@ -400,12 +431,18 @@ void init_openGL() {
 	centered_orientation = vector_3d(avg_x, avg_y, avg_z);
 	cam.setShape(45.0f, 1, Znear, Zfar);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+
+	//GLuint texture_name = read_and_set_texture("chessboard.jpg");
+	texture_name = loadBMP_custom("chessboard.bmp");
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture_name);
+	texture = 1;
 }
 
 void reload_file(int control) {
 	std::string file_name = file->get_text();
 	std::cout << file_name << std::endl;
-	object = reading_input_file(file_name.data(), &max_pos, &min_pos);
+	object = reading_input_file(file_name.data(), &max_pos, &min_pos, texture);
 	float avg_x = (max_pos.x + min_pos.x) / 2;
 	float avg_y = (max_pos.y + min_pos.y) / 2;
 	float avg_z = (max_pos.z + min_pos.z) / 2;
@@ -476,15 +513,27 @@ void set_lighting(int control) {
 	glutPostRedisplay();
 }
 
+void set_texture(int control) {
+	if (!texture) {
+		glDisable(GL_TEXTURE_2D);
+	}
+	else {
+		//GLuint texture_name = read_and_set_texture("chessboard.jpg");
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texture_name);
+	}
+	glutPostRedisplay();
+}
+
 
 void change_ambient(int control) {
-	ambient = vector_3d(ambient_light_r->get_int_val(), ambient_light_g->get_int_val(), ambient_light_b->get_int_val());
+	ambient = vector_3d(ambient_light_r->get_float_val(), ambient_light_g->get_float_val(), ambient_light_b->get_float_val());
 	GLfloat LightAmbient[] = { ambient.x, ambient.y, ambient.z, 1.0f };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, LightAmbient);
 }
 
 void change_illumination(int control) {
-	illumination_color = vector_3d(illumination_r->get_int_val(), illumination_g->get_int_val(), illumination_b->get_int_val());
+	illumination_color = vector_3d(illumination_r->get_float_val(), illumination_g->get_float_val(), illumination_b->get_float_val());
 }
 
 void change_illumination_dir(int control) {
@@ -495,31 +544,32 @@ void change_illumination_dir(int control) {
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
 
+GLUI_Spinner *attenuation_factor_spinner;
+void change_attenuation(int control) {
+	attenuation = attenuation_factor_spinner->get_float_val();
+}
+
+void change_shading(int control) {
+	if (shading == 0) {
+		glShadeModel(GL_FLAT);
+	}
+	else {
+		glShadeModel(GL_SMOOTH);
+	}
+	glutPostRedisplay();
+}
+
 int main(int argc, char *argv[])
 {
 
-	/*color_buffer = new char**[500];
-	z_buffer = new char *[500];
+	color_buffer = new float[500 * 500 * 3];
+	z_buffer = new float *[500];
 	for (size_t i = 0; i < 500; i++)
 	{
-		color_buffer[i] = new char*[500];
-		z_buffer[i] = new char[500];
-		for (size_t j = 0; j < 500; j++)
-		{
-			color_buffer[i][j] = new char[3];
-		}
+		z_buffer[i] = new float[500];
 	}
 
-	set_zero();*/
-
-	color_buffer = new char[500 * 500 * 3];
-	z_buffer = new char *[500];
-	for (size_t i = 0; i < 500; i++)
-	{
-		z_buffer[i] = new char[500];
-	}
-
-	object = reading_input_file("cow_up.in", &max_pos, &min_pos);
+	object = reading_input_file("cube_text.in", &max_pos, &min_pos, texture);
 	glutInit(&argc, argv);
 	init_openGL();
 	init_close2GL();
@@ -568,6 +618,8 @@ int main(int argc, char *argv[])
 	blue_spinner = glui->add_spinner("Blue", GLUI_SPINNER_FLOAT, &blue, 1);
 	blue_spinner->set_float_limits(0, 1);
 
+	glui->add_checkbox("Perspective Correct", &perspective_correct, 1);
+
 	ambient_light_r = glui->add_spinner("Ambient R", GLUI_SPINNER_FLOAT, &ambient.x, 1, change_ambient);
 	ambient_light_r->set_float_limits(0, 1);
 	ambient_light_g = glui->add_spinner("Ambient G", GLUI_SPINNER_FLOAT, &ambient.y, 1, change_ambient);
@@ -589,15 +641,38 @@ int main(int argc, char *argv[])
 	illumination_dir_z = glui->add_spinner("Illumination z", GLUI_SPINNER_FLOAT, &illumination.z, 1, change_illumination_dir);
 	illumination_dir_z->set_float_limits(-1000, 1000);
 
+	glui->add_column(true);
+
 	GLUI_Panel *obj_panel = glui->add_panel("Primitives");
 	GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(obj_panel, &primitives, 1);
 	glui->add_radiobutton_to_group(group1, "Triangles");
 	glui->add_radiobutton_to_group(group1, "Lines");
 	glui->add_radiobutton_to_group(group1, "Points");
 
+	glui->add_separator();
 
-	GLUI_Master.set_glutIdleFunc(myGlutIdle);
-	GLUI_Master.set_glutReshapeFunc(openglReshape);
+	GLUI_Panel *shading_panel = glui->add_panel("Shading");
+	GLUI_RadioGroup *group_shading = glui->add_radiogroup_to_panel(shading_panel, &shading, 1, change_shading);
+	glui->add_radiobutton_to_group(group_shading, "Gouraud");
+	glui->add_radiobutton_to_group(group_shading, "Flat");
+
+	glui->add_separator();
+
+	GLUI_Panel *attennuation_panel = glui->add_panel("Attenuation");
+	attenuation_factor_spinner = glui->add_spinner("Constant:", GLUI_SPINNER_FLOAT, &attenuation, 1, change_attenuation);
+	attenuation_factor_spinner->set_float_limits(0.0f, 1.0f);
+
+	glui->add_separator();
+
+	GLUI_Panel *texture_panel = glui->add_panel("Texture");
+	glui->add_checkbox_to_panel(texture_panel, "Texture",&texture, 1, set_texture);
+	GLUI_RadioGroup *texture_group = glui->add_radiogroup_to_panel(texture_panel, &texture_mode, 1);
+	glui->add_radiobutton_to_group(texture_group, "Bilinear");
+	glui->add_radiobutton_to_group(texture_group, "Nearest Neighbors");
+	glui->add_radiobutton_to_group(texture_group, "MipMap");
+
+	//GLUI_Master.set_glutIdleFunc(myGlutIdle);
+	//GLUI_Master.set_glutReshapeFunc(openglReshape);
 
 	glutMainLoop();
 

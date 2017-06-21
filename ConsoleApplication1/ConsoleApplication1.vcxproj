@@ -74,8 +74,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Gustavo\Downloads\corona-1.0.2-vc6\corona-1.0.2-vc6\include;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Gustavo\Downloads\corona-1.0.2-src.tar\corona-1.0.2-src\corona\vc7\x64\Debug;C:\Users\Gustavo Netto\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\glew;C:\Users\Gustavo Netto\Documents\cg\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -115,8 +115,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;freeglut.lib;glew32.lib;glui32.lib;glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Gustavo\Downloads\corona-1.0.2-src.tar\corona-1.0.2-src\corona\vc7\x64\Debug;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\freeglut;C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ipch\Dependencies\glew;C:\Users\Gustavo\Desktop\glui-2.35\glui-2.35\src\msvc\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>corona.lib;opengl32.lib;freeglut.lib;glew32.lib;glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

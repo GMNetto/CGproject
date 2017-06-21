@@ -76,6 +76,6 @@ void Rasterizer::include_triangle(Triangle triangle) {
 
 void Rasterizer::rasterize_triangles() {
 	for (auto triangle = triangles.begin(); triangle < triangles.end(); triangle++) {
-		triangle->rasterize_triangle();
+		triangle->rasterize_triangle(true);
 	}
 }

@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <glui.h>
+#include <string>
 
 //GLfloat LightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 //GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
@@ -49,7 +50,7 @@ typedef struct vector_3d {
 }vector_3d;
 
 typedef struct segment {
-	vector_3d pos, normal;
+	vector_3d pos, normal, texture;
 	int color_index;
 }Segment;
 
@@ -121,4 +122,8 @@ typedef struct tri_model {
 
 void init_settings(Tri_model* object);
 
-Tri_model* reading_input_file(const char *FileName, vector_3d *max_pos, vector_3d *min_pos);
+Tri_model* reading_input_file(const char *FileName, vector_3d *max_pos, vector_3d *min_pos, bool texture);
+
+GLuint read_and_set_texture(std::string texture_path);
+
+GLuint loadBMP_custom(const char * imagepath);
