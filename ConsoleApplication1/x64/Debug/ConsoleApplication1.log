@@ -1,33 +1,27 @@
-﻿  Triangle.cpp
+﻿  ogl_fps_controls.cpp
 c:\users\gustavo\desktop\glui-2.35\glui-2.35\src\include\gl\glui.h(868): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\camera.h(21): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(122): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(123): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.h(124): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(46): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(107): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(139): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(161): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(195): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(222): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(223): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(224): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(233): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(234): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(235): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(236): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(240): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(243): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(244): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(249): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(250): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(396): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(412): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(428): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(430): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(485): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(487): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\triangle.cpp(499): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(77): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(79): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(80): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(81): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(82): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(83): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(217): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(408): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(415): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(445): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(466): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(485): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(492): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(500): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(528): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(532): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(539): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(612): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\gustavo\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\ogl_fps_controls.cpp(617): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   ConsoleApplication1.vcxproj -> C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
   ConsoleApplication1.vcxproj -> C:\Users\Gustavo\Documents\Visual Studio 2015\Projects\ConsoleApplication1\x64\Debug\ConsoleApplication1.pdb (Full PDB)

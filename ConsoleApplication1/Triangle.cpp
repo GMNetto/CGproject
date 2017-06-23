@@ -50,9 +50,9 @@ std::pair<int, int> Triangle::calculate_delta(int first_point, int second_point)
 
 
 vector_3d Triangle::get_texture_sample(int x, int y) {
-	unsigned char red = texture[3 * y * 64 + 3 * x + 0];
-	unsigned char green = texture[3 * y * 64 + 3 * x + 1];
-	unsigned char blue = texture[3 * y * 64 + 3 * x + 2];
+	unsigned char red = texture[3 * y * texture_width + 3 * x + 0];
+	unsigned char green = texture[3 * y * texture_width + 3 * x + 1];
+	unsigned char blue = texture[3 * y * texture_width + 3 * x + 2];
 	return vector_3d(float(red)/255, float(green)/255, float(blue)/255);
 }
 
@@ -81,9 +81,9 @@ void Triangle::draw_texture(int x1, int x2, int y, float z1, float z2, vector_3d
 				if (texture_mode) { //texture
 					int i = int(t_y);
 					int j = int(t_begin);
-					unsigned char red = texture[3 * i * 64 + 3 * j + 0];
-					unsigned char green = texture[3 * i * 64 + 3 * j + 1];
-					unsigned char blue = texture[3 * i * 64 + 3 * j + 2];
+					unsigned char red = texture[3 * i * texture_width + 3 * j + 0];
+					unsigned char green = texture[3 * i * texture_width + 3 * j + 1];
+					unsigned char blue = texture[3 * i * texture_width + 3 * j + 2];
 					draw_pixel(x, y, z, vector_3d(red/255.0, green/255.0, blue/255.0));
 				}
 				else {
@@ -101,70 +101,15 @@ void Triangle::draw_texture(int x1, int x2, int y, float z1, float z2, vector_3d
 				if (texture_mode) { //texture
 					int i = int(t_y);
 					int j = int(t_begin);
-					unsigned char red = texture[3 * i * 64 + 3 * j + 0];
-					unsigned char green = texture[3 * i * 64 + 3 * j + 1];
-					unsigned char blue = texture[3 * i * 64 + 3 * j + 2];
+					unsigned char red = texture[3 * i * texture_width + 3 * j + 0];
+					unsigned char green = texture[3 * i * texture_width + 3 * j + 1];
+					unsigned char blue = texture[3 * i * texture_width + 3 * j + 2];
 					draw_pixel(x, y, z, vector_3d(red/255.0, green/255.0, blue/255.0));
 				}
 				else {
 					draw_pixel(x, y, z, c);
 				}
 				t_begin += inc_texture_x; // texture
-			}
-		}
-	}
-}
-
-void Triangle::draw_texture_2(int x1, int x2, int y, float z1, float z2, vector_3d c1, vector_3d c2, bool wireframe,
-	float t_begin, float t_end, float t_y, float t_w_begin, float t_w_end) {
-	if (wireframe) {
-		draw_pixel(x1, y, z1, c1);
-		draw_pixel(x2, y, z2, c2);
-	}
-	else {
-		if (x1 < x2) {
-			float inc_texture_x = (t_end - t_begin) / (x2 - x1); // texture
-			float inc_texture_w = (t_w_end - t_w_begin) / (x2 - x1);// correct
-			for (int x = x1; x <= x2; x++) {
-				float p = (x - x1) / (float)(x2 - x1);
-				float z = z1 * (1 - p) + z2 * p;
-				vector_3d c = c1 * (1 - p) + c2 * p;
-				if (texture_mode) { //texture
-					int i = int(t_y/t_w_begin); //correct
-					int j = int(t_begin/t_w_begin); //correct
-					//std::cout << i << " " << j << std::endl;
-					unsigned char red = texture[3 * i * 64 + 3 * j + 0];
-					unsigned char green = texture[3 * i * 64 + 3 * j + 1];
-					unsigned char blue = texture[3 * i * 64 + 3 * j + 2];
-					draw_pixel(x, y, z, vector_3d(red / 255.0, green / 255.0, blue / 255.0));
-				}
-				else {
-					draw_pixel(x, y, z, c);
-				}
-				t_begin += inc_texture_x; // texture
-				t_w_begin += inc_texture_w; // correct
-			}
-		}
-		else {
-			float inc_texture_x = (t_end - t_begin) / (x1 - x2); // texture
-			float inc_texture_w = (t_w_end - t_w_begin) / (x1 - x2);// correct
-			for (int x = x2; x <= x1; x++) {
-				float p = (x - x2) / (float)(x1 - x2);
-				float z = z2 * (1 - p) + z1 * p;
-				vector_3d c = c2 * (1 - p) + c1 * p;
-				if (texture_mode) { //texture
-					int i = int(t_y/t_w_begin);
-					int j = int(t_begin/t_w_begin);
-					unsigned char red = texture[3 * i * 64 + 3 * j + 0];
-					unsigned char green = texture[3 * i * 64 + 3 * j + 1];
-					unsigned char blue = texture[3 * i * 64 + 3 * j + 2];
-					draw_pixel(x, y, z, vector_3d(red / 255.0, green / 255.0, blue / 255.0));
-				}
-				else {
-					draw_pixel(x, y, z, c);
-				}
-				t_begin += inc_texture_x; // texture
-				t_w_begin += inc_texture_w; // correct
 			}
 		}
 	}
@@ -201,7 +146,7 @@ void Triangle::create_mipmaps() {
 		{
 			for (size_t k = 0; k < 3; k++)
 			{
-				mipmaps[0][3 * i * 64 + 3 * j + k] = texture[3 * i * 64 + 3 * j + k];
+				mipmaps[0][3 * i * texture_width + 3 * j + k] = texture[3 * i * texture_width + 3 * j + k];
 			}
 		}
 	}
@@ -215,19 +160,25 @@ void Triangle::create_mipmaps() {
 }
 
 vector_3d Triangle::get_texture_mipmap(int x, int y, int level) {
-	int width_level = texture_width << level;
-	int height_level = texture_height << level;
+	int width_level = texture_width >> level;
+	int height_level = texture_height >> level;
 	int x_level = int(std::min(x, width_level));
 	int y_level = int(std::min(y, height_level));
 	unsigned char red = mipmaps[level][y_level * width_level * 3 + 3 * x_level + 0];
 	unsigned char green = mipmaps[level][y_level * width_level * 3 + 3 * x_level + 1];
 	unsigned char blue = mipmaps[level][y_level * width_level * 3 + 3 * x_level + 2];
-	return vector_3d(red, green, blue);
+	return vector_3d(float(red)/255, float(green)/255, float(blue)/255);
 }
 
 vector_3d Triangle::sample_texture(vector_3d texture_coord, float level) {
-	texture_coord.x *= 64;
-	texture_coord.y *= 64;
+	if (texture_coord.x < 0)
+		texture_coord.x = 0;
+	else
+		texture_coord.x *= texture_width;
+	if(texture_coord.y < 0)
+		texture_coord.y = 0;
+	else
+		texture_coord.y *= texture_height;
 
 	if (this->texture_type == 0) {
 		vector_3d s0 = this->get_texture_sample(floor(texture_coord.x), floor(texture_coord.y));
@@ -246,9 +197,14 @@ vector_3d Triangle::sample_texture(vector_3d texture_coord, float level) {
 		float first_y = texture_coord.y / (1 << first_level);
 		float second_x = texture_coord.x / (1 << second_level);
 		float second_y = texture_coord.y / (1 << second_level);
-		vector_3d color_first_level = get_texture_mipmap(first_x, first_y, level);
-		vector_3d color_second_level = get_texture_mipmap(second_x, second_y, level);
-		return color_first_level * (1 - (level - first_level)) + color_second_level *(1 - (1 - (level - first_level)));
+		vector_3d color_first_level = get_texture_mipmap(first_x, first_y, first_level);
+		vector_3d color_second_level = get_texture_mipmap(second_x, second_y, second_level);
+		float w_1 = (1 - (level - first_level));
+		if (w_1 < 1) {
+			int a = 1;
+		}
+		float w_2 = 1 - w_1;
+		return color_first_level * w_1 + color_second_level * w_2;
 	}
 }
 
@@ -267,10 +223,12 @@ void Triangle::draw_line(int x1, int x2, int y, float z1, float z2, vector_3d c1
 				if (this->texture_mode) {
 					vector_3d t = t1 * (1 - p) + t2 * p;
 
-					if(perspective_correct)
+					if (perspective_correct) {
 						c = sample_texture(t / w, level);
-					else
+					}
+					else {
 						c = sample_texture(t, level);
+					}
 				}
 				else {
 					if(perspective_correct)
@@ -290,10 +248,14 @@ void Triangle::draw_line(int x1, int x2, int y, float z1, float z2, vector_3d c1
 				if (this->texture_mode) {
 					vector_3d t = t2 * (1 - p) + t1 * p;
 
-					if (perspective_correct)
+					if (perspective_correct) {
+						if (t.x < 0) t.x = 0;
+						if (t.y < 0) t.y = 0;
 						c = sample_texture(t / w, level);
-					else
+					}
+					else {
 						c = sample_texture(t, level);
+					}
 				}
 				else {
 					if (perspective_correct)
@@ -391,7 +353,7 @@ void Triangle::rasterize_triangle(bool perspective_correct) {
 	float dx_part = sqrt((ds / dx)*(ds / dx) + (dt / dx)*(dt / dx));
 	float dy_part = sqrt((ds / dy)*(ds / dy) + (dt / dy)*(dt / dy));
 
-	float level = std::log2(std::max(dx_part, dy_part));
+	float level = std::max(std::log2(std::max(dx_part, dy_part)), 0.0f);
 
 	float eps = 1e-3;
 	if (abs(v1.y - v0.y) < eps) {

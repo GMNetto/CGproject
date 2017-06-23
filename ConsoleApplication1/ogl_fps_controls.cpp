@@ -39,7 +39,7 @@ char file_model[255] = "cube_text.in";
 int primitives = 0;
 int shading = 0;
 float attenuation = 0.5;
-int texture_mode = 0;
+int texture_mode = 2;
 vector_3d centered_position = { 0, 0, 0 }, centered_orientation = { 0, 0, 0 };
 
 float red_color = 0, green_color = 0, blue_color = 0;
@@ -59,11 +59,12 @@ float red = 0, green = 0, blue = 0;
 int texture = 1;
 int perspective_correct = 1;
 
-corona::Image* image = corona::OpenImage("chessboard.jpg");
+corona::Image* image = corona::OpenImage("chessboard.bmp");
 unsigned char* texture_map = (unsigned char*)image->getPixels();
 
 GLuint texture_name;
 
+int window_width = 500, window_height = 500;
 
 // global camera object
 //<<<<<<<<<<<<<<<<<<<<<<<< myKeyboard >>>>>>>>>>>>>>>>>>>>>>
@@ -104,18 +105,56 @@ void myKeyboard(unsigned char key, int x, int y)
 // close2gl reshape function
 //
 //*******************************************************************************
+
+float *color_buffer;
+float **z_buffer;
+
+void set_zero() {
+	for (size_t i = 0; i < window_width; i++)
+	{
+		for (size_t j = 0; j < window_height; j++)
+		{
+			z_buffer[j][i] = 1;
+			for (size_t k = 0; k < 3; k++)
+			{
+				color_buffer[3 * i + 3 * window_width * j + k] = 100;
+			}
+		}
+	}
+}
+
+
 void close2glReshape(int w, int h)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	window_width = w;
+	window_height = h;
 	gluOrtho2D(0, (GLsizei)w, 0, (GLsizei)h);
+
+	color_buffer = new float[window_width * window_height * 3];
+	z_buffer = new float *[window_height];
+	for (size_t i = 0; i < window_height; i++)
+	{
+		z_buffer[i] = new float[window_width];
+	}
+	set_zero();
 }
 
 
 void openglReshape(int w, int h)
 {
+	window_width = w;
+	window_height = h;
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 
+	/*color_buffer = new float[window_width * window_height * 3];
+	z_buffer = new float *[window_width];
+	for (size_t i = 0; i < window_height; i++)
+	{
+		z_buffer[i] = new float[window_width];
+	}
+	set_zero();*/
 }
 
 Tri_model* object;
@@ -125,18 +164,28 @@ void display_face(const face& face) {
 	GLfloat diffuse[] = { red_color, green_color, blue_color, 1 };
 	//glColor3f(face.diffuse_color.x, face.diffuse_color.y, face.diffuse_color.z);
 	//glColor3f(red_color, green_color, blue_color);
-	if (texture)
-		glTexCoord2f(face.v0.texture.x, face.v0.texture.y);
-		glTexCoord2f(face.v1.texture.x, face.v1.texture.y);
-		glTexCoord2f(face.v2.texture.x, face.v2.texture.y);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	if(texture)
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glBegin(GL_TRIANGLES);
+	if (texture) {
+		glTexCoord2f(face.v0.texture.x, face.v0.texture.y);
+	}
 	glNormal3f(face.v0.normal.x, face.v0.normal.y, face.v0.normal.z);
 	glVertex3f(face.v0.pos.x, face.v0.pos.y, face.v0.pos.z);
+	if (texture) {
+		glTexCoord2f(face.v1.texture.x, face.v1.texture.y);
+	}
 	glNormal3f(face.v1.normal.x, face.v1.normal.y, face.v1.normal.z);
 	glVertex3f(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z);
+	if (texture) {
+		glTexCoord2f(face.v2.texture.x, face.v2.texture.y);
+	}
 	glNormal3f(face.v2.normal.x, face.v2.normal.y, face.v2.normal.z);
 	glVertex3f(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z);
+	//glVertex3f(0, 0, 0);
+	//glVertex3f(100, 0, 0);
+	//glVertex3f(100, 100, 0);
 	glEnd();
 }
 
@@ -208,15 +257,18 @@ void display_object() {
 		//texture_name = loadBMP_custom("chessboard.bmp");
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture_name);
+		//std::cout << texture_name << std::endl;
 	}
 
 	glBegin(GL_TRIANGLES);
 
-	for (int i = 0; i < object->number_triangles; ++i) {
+	/*for (int i = 0; i < object->number_triangles; ++i) {
 		display_face(object->faces[i]);
-	}
-	//display_face(object->faces[5]);
-	//display_face(object->faces[1]);
+	}*/
+	display_face(object->faces[6]);
+	display_face(object->faces[1]);
+	display_face(object->faces[2]);
+	display_face(object->faces[3]);
 
 	glEnd();
 
@@ -236,22 +288,6 @@ void display_object() {
 //
 //*******************************************************************************
 
-float *color_buffer;
-float **z_buffer;
-
-void set_zero() {
-	for (size_t i = 0; i < 500; i++)
-	{
-		for (size_t j = 0; j < 500; j++)
-		{
-			z_buffer[i][j] = 1;
-			for (size_t k = 0; k < 3; k++)
-			{
-				color_buffer[3*i + 3 * 500 * j + k] = 100;
-			}
-		}
-	}
-}
 
 void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Triangle>& triangles) {
 
@@ -272,8 +308,8 @@ void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Tri
 	//Matrix world_v1 = viewModel_close2GL->vector2matrix(Vector3(face.v1.pos.x, face.v1.pos.y, face.v1.pos.z));
 	//Matrix world_v2 = viewModel_close2GL->vector2matrix(Vector3(face.v2.pos.x, face.v2.pos.y, face.v2.pos.z));
 
-	if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
-		return;
+	//if (projected_v0.check_vertex_projected() || projected_v1.check_vertex_projected() || projected_v2.check_vertex_projected())
+	//	return;
 
 	//world_v0.normalize_vertex_project();
 	//world_v1.normalize_vertex_project();
@@ -294,7 +330,7 @@ void display_faces_close2GL(Matrix& proj_view, const face& face, std::vector<Tri
 	vertex v2(vector_3d(viewport_v2.get_data(0, 0), viewport_v2.get_data(1, 0), viewport_v2.get_data(2, 0)),
 		vector_3d(red, green, blue), face.v2.normal,
 		face.v2.pos, w_s[2], face.v2.texture);
-	Triangle* t = new Triangle(v0, v1, v2, z_buffer, color_buffer, 500, 500, face.face_normal);
+	Triangle* t = new Triangle(v0, v1, v2, z_buffer, color_buffer, window_width, window_height, face.face_normal);
 	triangles.push_back(*t);
 
 }
@@ -381,7 +417,7 @@ void close2glDisplay(void)
 
 	
 	//glEnd();
-	glDrawPixels(500, 500, GL_RGB, GL_FLOAT, color_buffer);
+	glDrawPixels(window_width, window_height, GL_RGB, GL_FLOAT, color_buffer);
 	
 	glutSwapBuffers();
 }
@@ -399,7 +435,7 @@ void myGlutIdle(void)
 void init_close2GL() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(450, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(window_width, window_height);
 	win_id[CLOSE2GL_WINDOW] = glutCreateWindow("Close2GL");
 	init_settings(object);
 	glutReshapeFunc(close2glReshape);
@@ -418,7 +454,7 @@ void init_openGL() {
 	g_vEye = { avg_x, avg_y, float((avg_z)+maximum_side) };
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(window_width, window_height);
 	win_id[OPENGL_WINDOW] = glutCreateWindow("OpenGL");
 	init_settings(object);
 	glutKeyboardFunc(myKeyboard);
@@ -433,10 +469,14 @@ void init_openGL() {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
 	//GLuint texture_name = read_and_set_texture("chessboard.jpg");
-	texture_name = loadBMP_custom("chessboard.bmp");
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture_name);
-	texture = 1;
+	if (texture) {
+		glutSetWindow(win_id[OPENGL_WINDOW]);
+		glEnable(GL_TEXTURE_2D);
+		texture_name = read_and_set_texture("chessboard.bmp");
+		std::cout << texture_name << std::endl;
+		glBindTexture(GL_TEXTURE_2D, texture_name);
+		texture = 0;
+	}
 }
 
 void reload_file(int control) {
@@ -562,19 +602,19 @@ void change_shading(int control) {
 int main(int argc, char *argv[])
 {
 
-	color_buffer = new float[500 * 500 * 3];
-	z_buffer = new float *[500];
-	for (size_t i = 0; i < 500; i++)
+	color_buffer = new float[window_width * window_height * 3];
+	z_buffer = new float *[window_width];
+	for (size_t i = 0; i < window_height; i++)
 	{
-		z_buffer[i] = new float[500];
+		z_buffer[i] = new float[window_width];
 	}
 
-	object = reading_input_file("cube_text.in", &max_pos, &min_pos, texture);
+	object = reading_input_file("cow_up_no_text.in", &max_pos, &min_pos, texture);
 	glutInit(&argc, argv);
 	init_openGL();
-	init_close2GL();
+	//init_close2GL();
 
-	viewPort_close2GL->setViewPort(500, 500);
+	viewPort_close2GL->setViewPort(window_width, window_height);
 
 	/****************************************/
 	/*         Here's the GLUI code         */

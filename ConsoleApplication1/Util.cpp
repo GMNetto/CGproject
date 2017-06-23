@@ -8,7 +8,7 @@
 #define MAX_MATERIAL_COUNT 10
 
 GLuint read_and_set_texture(std::string texture_path) {
-	corona::Image* image = corona::OpenImage("chessboard.jpg");
+	corona::Image* image = corona::OpenImage(texture_path.data());
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
@@ -18,13 +18,15 @@ GLuint read_and_set_texture(std::string texture_path) {
 	//
 	// setting mip map pyramid
 	//
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->getWidth(), image->getHeight(),
+		GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 		GL_LINEAR_MIPMAP_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->getWidth(), image->getHeight(), 0,
 		GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image->getWidth(), image->getHeight(),
-		GL_RGB, GL_UNSIGNED_BYTE, image->getPixels());
+
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
 	return texture_id;
 }
 
@@ -87,10 +89,15 @@ GLuint loadBMP_custom(const char * imagepath) {
 	// "Bind" the newly created texture : all future texture functions will modify this texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height,
+		GL_RGB, GL_UNSIGNED_BYTE, data);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	// Give the image to OpenGL
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
 	// OpenGL has now copied the data. Free our own version
@@ -100,14 +107,12 @@ GLuint loadBMP_custom(const char * imagepath) {
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
 
 	//glGenerateMipmap(GL_TEXTURE_2D);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,width, height, 0,
-		GL_RGB, GL_UNSIGNED_BYTE,data);
 	//gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height,
 	//	GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 
-	delete[] data;
+	//delete[] data;
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//
